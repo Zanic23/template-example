@@ -59,7 +59,12 @@ private:
 	static inline vec_t * registrations;
 	static inline delimeters_t * delimeters;
 };
-
+template <typename T>
+auto createFunction(T func) -> std::function<ValueType*(std::string)> {
+	return [=](std::string str)->ValueType* {
+		return (ValueType*)func(str);
+	};
+}
 template <template <typename U> class T>
 class ValueRegistration :
 	public Registrants
