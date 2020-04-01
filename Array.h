@@ -12,9 +12,7 @@ namespace jbon {
 		public TemplateValueTypeContract<Array<T>>
 	{
 	private:
-		std::vector<T> values;
-		friend class ValueTypeContract<Array<T>>;
-		friend class ValueRegistration<Array<T>>;
+	//implemented functions
 		static Array<T> * create(std::string str)
 		{
 			auto textValues = jbonSplit(str.substr(1, str.size() - 2), ',');
@@ -35,25 +33,6 @@ namespace jbon {
 		}
 
 	public:
-		typedef typename std::vector<T>::iterator iterator;
-		typedef typename std::vector<T>::const_iterator const_iterator;
-		iterator begin() { return values.begin(); }
-		iterator end() { return values.end(); }
-
-		void erase(iterator it) { values.erase(it); }
-		int size() { return values.size(); }
-		bool empty() { values.empty(); }
-		T& operator[](const int index) { return values.at[index]; }
-		T& at(const int index) { return values.at(index); }
-
-		using type = T;
-		Array(std::string str)
-		{
-			auto textValues = jbonSplit(str.substr(1, str.size() - 2), ',');
-			for (auto textValue : textValues) {
-				values.push_back(Parser::parse<T>(textValue));
-			}
-		}
 		Array() {}
 		~Array() {}
 
