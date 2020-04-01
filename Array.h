@@ -1,4 +1,39 @@
-//example
+//TEMPLATE
+class ValueType {
+private:
+	virtual bool virtualIsSameType(std::string str) = 0;
+	virtual ValueType * virtualCreate(std::string str) = 0;
+	virtual std::pair<char,char> virtualGetSurroundingDelimeters() = 0;
+	virtual std::string serialize() = 0;
+public:
+	virtual ~ValueType() {}
+};
+
+//specialized template contract
+template <template<typename U> class T>
+class TemplateValueTypeContract :
+	public ValueType
+{
+private:
+	using ClassSubType = U;
+	//register the class
+	static inline ValueRegistration<T<U>> registered;
+	//these wont ever actually be used, but they require the child to implement the static methods
+	bool virtualIsSameType(std::string str) {
+		return T<ClassSubType>::isSameType(str);
+	}
+	//should return malloced pointer of child
+	ValueType * virtualCreate(std::string str) {
+		return T<ClassSubType>::create(str);
+	}
+	std::pair<char, char> virtualGetSurroundingDelimeters() {
+		return T<ClassSubType>::getSurroundingDelimeters();
+	}
+public:
+	virtual ~TemplateValueTypeContract() {}
+};
+
+//EXAMPLE
 template <typename T>
 class Array :
 	public TemplateValueTypeContract<Array<T>>
@@ -10,10 +45,6 @@ private:
 	static std::pair<char, char> getSurroundingDelimeters() { return {',',','}; }
 	std::string serialize() { return ""; }
 };
-
-
-
-
 
 //USAGE
 
